@@ -1,3 +1,6 @@
+/*
+Render all movies
+ */
 import React, { Component, PropTypes } from 'react';
 import {
   AppRegistry,
@@ -5,100 +8,60 @@ import {
   ListView,
   Text,
   View,
-  TouchableHighlight
+  TouchableHighlight,
+  Image
 } from 'react-native';
-import RowData from '../component/RowData';
-
+//import NavigationBar from 'react-native-navigationbar';
+import DetailsMovie from '../component/DetailsMovie';
+import Header from '../component/HeaderMovies';
  
 class MoviesList extends React.Component{
   constructor(props) {
     super(props);
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-    this.state = {
-      dataSource: ds.cloneWithRows([
-        {'name':'John', 'url':'https://image.shutterstock.com/z/stock-photo-man-worker-washing-car-s-alloy-wheels-on-a-car-wash-243440098.jpg', 'rating':2}, 
-        {'name':'Joel','url':'https://static.pexels.com/photos/141635/pexels-photo-141635.jpeg', 'rating':8}, 
-        {'name':'James','url':'https://image.shutterstock.com/z/stock-photo-woman-in-retro-car-against-night-city-103153997.jpg','rating':9}, 
-        {'name':'Jimmy', 'url':'https://static.pexels.com/photos/141635/pexels-photo-141635.jpeg', 'rating':5}, 
-        {'name':'Jackson', 'url':'https://image.shutterstock.com/z/stock-photo-man-worker-washing-car-s-alloy-wheels-on-a-car-wash-243440098.jpg', 'rating':7}, 
-        {'name':'Jillian', 'url':'https://image.shutterstock.com/z/stock-photo-woman-in-retro-car-against-night-city-103153997.jpg','rating':5}, 
-        {'name':'Julie', 'url':'https://static.pexels.com/photos/141635/pexels-photo-141635.jpeg', 'rating':4}, 
-        {'name':'Devin','url':'https://image.shutterstock.com/z/stock-photo-woman-in-retro-car-against-night-city-103153997.jpg','rating':3},
-        {'name':'John', 'url':'https://image.shutterstock.com/z/stock-photo-man-worker-washing-car-s-alloy-wheels-on-a-car-wash-243440098.jpg', 'rating':2}, 
-        {'name':'Joel','url':'https://static.pexels.com/photos/141635/pexels-photo-141635.jpeg', 'rating':8}, 
-        {'name':'James','url':'https://image.shutterstock.com/z/stock-photo-woman-in-retro-car-against-night-city-103153997.jpg','rating':9}, 
-        {'name':'Jimmy', 'url':'https://static.pexels.com/photos/141635/pexels-photo-141635.jpeg', 'rating':5}, 
-        {'name':'Jackson', 'url':'https://image.shutterstock.com/z/stock-photo-man-worker-washing-car-s-alloy-wheels-on-a-car-wash-243440098.jpg', 'rating':7}, 
-        {'name':'Jillian', 'url':'https://image.shutterstock.com/z/stock-photo-woman-in-retro-car-against-night-city-103153997.jpg','rating':5}, 
-        {'name':'Julie', 'url':'https://static.pexels.com/photos/141635/pexels-photo-141635.jpeg', 'rating':4}, 
-        {'name':'Devin','url':'https://image.shutterstock.com/z/stock-photo-woman-in-retro-car-against-night-city-103153997.jpg','rating':3},
-        {'name':'John', 'url':'https://image.shutterstock.com/z/stock-photo-man-worker-washing-car-s-alloy-wheels-on-a-car-wash-243440098.jpg', 'rating':2}, 
-        {'name':'Joel','url':'https://static.pexels.com/photos/141635/pexels-photo-141635.jpeg', 'rating':8}, 
-        {'name':'James','url':'https://image.shutterstock.com/z/stock-photo-woman-in-retro-car-against-night-city-103153997.jpg','rating':9}, 
-        {'name':'Jimmy', 'url':'https://static.pexels.com/photos/141635/pexels-photo-141635.jpeg', 'rating':5}, 
-        {'name':'Jackson', 'url':'https://image.shutterstock.com/z/stock-photo-man-worker-washing-car-s-alloy-wheels-on-a-car-wash-243440098.jpg', 'rating':7}, 
-        {'name':'Jillian', 'url':'https://image.shutterstock.com/z/stock-photo-woman-in-retro-car-against-night-city-103153997.jpg','rating':5}, 
-        {'name':'Julie', 'url':'https://static.pexels.com/photos/141635/pexels-photo-141635.jpeg', 'rating':4}, 
-        {'name':'Devin','url':'https://image.shutterstock.com/z/stock-photo-woman-in-retro-car-against-night-city-103153997.jpg','rating':3},
-        {'name':'John', 'url':'https://image.shutterstock.com/z/stock-photo-man-worker-washing-car-s-alloy-wheels-on-a-car-wash-243440098.jpg', 'rating':2}, 
-        {'name':'Joel','url':'https://static.pexels.com/photos/141635/pexels-photo-141635.jpeg', 'rating':8}, 
-        {'name':'James','url':'https://image.shutterstock.com/z/stock-photo-woman-in-retro-car-against-night-city-103153997.jpg','rating':9}, 
-        {'name':'Jimmy', 'url':'https://static.pexels.com/photos/141635/pexels-photo-141635.jpeg', 'rating':5}, 
-        {'name':'Jackson', 'url':'https://image.shutterstock.com/z/stock-photo-man-worker-washing-car-s-alloy-wheels-on-a-car-wash-243440098.jpg', 'rating':7}, 
-        {'name':'Jillian', 'url':'https://image.shutterstock.com/z/stock-photo-woman-in-retro-car-against-night-city-103153997.jpg','rating':5}, 
-        {'name':'Julie', 'url':'https://static.pexels.com/photos/141635/pexels-photo-141635.jpeg', 'rating':4}, 
-        {'name':'Devin','url':'https://image.shutterstock.com/z/stock-photo-woman-in-retro-car-against-night-city-103153997.jpg','rating':3},
-        {'name':'John', 'url':'https://image.shutterstock.com/z/stock-photo-man-worker-washing-car-s-alloy-wheels-on-a-car-wash-243440098.jpg', 'rating':2}, 
-        {'name':'Joel','url':'https://static.pexels.com/photos/141635/pexels-photo-141635.jpeg', 'rating':8}, 
-        {'name':'James','url':'https://image.shutterstock.com/z/stock-photo-woman-in-retro-car-against-night-city-103153997.jpg','rating':9}, 
-        {'name':'Jimmy', 'url':'https://static.pexels.com/photos/141635/pexels-photo-141635.jpeg', 'rating':5}, 
-        {'name':'Jackson', 'url':'https://image.shutterstock.com/z/stock-photo-man-worker-washing-car-s-alloy-wheels-on-a-car-wash-243440098.jpg', 'rating':7}, 
-        {'name':'Jillian', 'url':'https://image.shutterstock.com/z/stock-photo-woman-in-retro-car-against-night-city-103153997.jpg','rating':5}, 
-        {'name':'Julie', 'url':'https://static.pexels.com/photos/141635/pexels-photo-141635.jpeg', 'rating':4}, 
-        {'name':'Devin','url':'https://image.shutterstock.com/z/stock-photo-woman-in-retro-car-against-night-city-103153997.jpg','rating':3}
+    this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+  }
 
-      ])
+  goToDetails = (movieId) => {
+    return (event) => {
+      this.props.navigator.push({
+        title: 'Details',
+          id: 'DetailsMovie',
+        component: DetailsMovie,
+        passProps: {movieId: movieId }
+      });
     };
   }
 
-   static propTypes = {
-    title: PropTypes.string.isRequired,
-    navigator: PropTypes.object.isRequired,
-  }
-
-  //  _onForward = () => {
-  //   this.props.navigator.push({
-  //     title: 'Scene ' + nextIndex,
-  //   });
-  // }
-
   render(){
-    // return(
-    //   <View style={styles.container}>
-    //     <Text>Current Scene: { this.props.title }</Text>
-    //     <TouchableHighlight onPress={this._onForward}>
-    //       <Text>Tap me to load the next scene</Text>
-    //     </TouchableHighlight>
-    //   </View>
-    //   );
-
+    const dataSource =  this.ds.cloneWithRows(this.props.movies)
     return (
-      <View style={styles.container}>
-      <ListView styles={styles.container}
-        dataSource={this.state.dataSource}
-        renderRow={(rowData) => <RowData {...rowData} />} 
+      <ListView style = {styles.headerContainer}
+        dataSource={dataSource}
+        renderRow = {(rowData) => 
+          <TouchableHighlight onPress={this.goToDetails(rowData.id) }>
+            <View style={styles.detailContainer}>
+              <Image source={{ uri: rowData.movieImage}} style={styles.photo} />
+               <Text style={styles.text}>
+                   {`${rowData.movieName} \nRating: ${rowData.rating}`}
+               </Text>
+            </View>
+          </TouchableHighlight>
+        }
+        enableEmptySections={true}
+        renderHeader={() => <Header />}
       />
-      </View>
     );
   } 
 }
 
+
 const styles = StyleSheet.create({
+  /*
   container: {
     flex: 1,
-    //justifyContent: 'center',
-    marginTop: 0,
-    //alignItems: 'center',
+    justifyContent: 'center',
+    //marginTop: 100,
+    alignItems: 'center',
     backgroundColor: '#F5FCFF',
   },
   welcome: {
@@ -110,6 +73,40 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#333333',
     marginBottom: 5,
+  },
+  container: {
+    flex: 1,
+    padding: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  */
+  container: {
+      flex: 0,
+      flexDirection: 'row',
+      marginTop: 65,
+      margin: 10,
+  },
+    headerContainer:{
+        flex:0,
+        flexDirection: 'column',
+        marginTop: 65,
+    },
+    detailContainer: {
+        flex: 0,
+        flexDirection: 'row',
+        //marginTop: 40,
+        margin: 10,
+    },
+  text: {
+    marginLeft: 12,
+    fontSize: 16,
+
+  },
+  photo: {
+    height: 40,
+    width: 40,
+    borderRadius: 20,
   },
 });
 

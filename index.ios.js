@@ -1,146 +1,139 @@
-/**
- * Task React Native
- * https://github.com/facebook/react-native
- * @flow
+/*
+ * Task React Native 2017
  */
-
-
 import React, { Component } from 'react';
 import {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  View,
-  ListView,
-  NavigatorIOS,
-  TouchableHighlight
+    AppRegistry,
+    StyleSheet,
+    Text,
+    ListView,
+    Navigator,
+    TouchableHighlight,
+    TouchableOpacity
 } from 'react-native';
-//import { StackNavigator } from 'react-navigation';
 import MoviesList from './component/MoviesList'
 import DetailsMovie from './component/DetailsMovie'
+import { createStore, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
+import rootReducer from './reducer'
+import MoviesContainer from './containers/moviesContainer'
+
+const initialState = {};
+const store = createStore(
+      rootReducer, 
+      initialState,
+      applyMiddleware(thunk),
+      window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    );
+
 
 export default class showMovies extends Component {
   constructor(props) {
     super(props);
-  //   const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-  //   this.state = {
-  //     dataSource: ds.cloneWithRows([
-  //       'John', 'Joel', 'James', 'Jimmy', 'Jackson', 'Jillian', 'Julie', 'Devin'
-  //     ])
-  //   };
   }
-
-  // detailsPage = () => {
-  //   this.props.navigator.push({
-  //     title: 'Details',
-  //     component: DetailsMovie
-  //   })
-  // }
-
-  // onRightButtonPress = () => {
-  //     this.props.navigator.push({
-  //       title: 'Scene ' + nextIndex,
-  //     });
-  //   };
 
   render() {
-    // return (
-    //   <View style={styles.container}>
-    //   <ListView styles={styles.container}
-    //     dataSource={this.state.dataSource}
-    //     //renderRow={(rowData) => <View><Text>{rowData}</Text></View>}
-    //     renderRow={(rowData) => <Text>{rowData}</Text>}
-    //   />
-
-    //   </View>
-    // );
-
     return (
-      <NavigatorIOS
-        initialRoute={{
-          component: MoviesList,
-          title: 'Movies List',
-          name: 'MoviesList'
-          //rightButtonTitle: 'Details!'
-          //leftButtonTitle: 'Back',
-          //onRightButtonPress: this.detailsPage
-          //passProps: { myProp: 'foo' }
-          //name: 'MoviesList'
-        }}
-        // renderScene={ this.renderScene } 
-        style={{flex: 1}}
-      />
+      <Provider store={store}>
+        <Navigator
+            /*style={styles.container}*/
+            initialRoute={{id: 'MoviesList', title: 'Movies' }}
+            renderScene={this.navigatorRenderScene.bind(this)}
+            navigationBar = {
+               <Navigator.NavigationBar
+                  style = { styles.navigationBar }
+                  routeMapper = { NavigationBarRouteMapper } />
+            }
+        />
+      </Provider>
     );
-
-
   }
 
-  // renderScene(route, navigator) {
-  //     if(route.name == 'MoviesList') {
-  //        return (
-  //           <MoviesList
-  //              navigator = {navigator}
-  //              {...route.passProps} 
-  //           />
-  //        )
-  //     }
-  //     if(route.name == 'DetailsMovie') {
-  //        return (
-  //           <DetailsMovie
-  //              navigator = {navigator}
-  //              {...route.passProps} 
-  //           />
-  //        )
-  //     }
-  //  }
-
+  navigatorRenderScene(route, navigator) {
+    switch (route.id) {
+      case 'MoviesList':
+        return (
+          <MoviesContainer navigator={navigator} {...route.passProps}  title="Movies List"/>
+        );
+      case 'DetailsMovie':
+       return (<DetailsMovie navigator={navigator} {...route.passProps} leftButton={ "Back" }  title="Details" />);
+    }
+  }
 }
 
+const NavigationBarRouteMapper = {
+    LeftButton(route, navigator, index, navState) {
+        if(index > 0) {
+            return (
+                <TouchableOpacity
+                    onPress = {() => { if (index > 0) { navigator.pop() } }}>
+                  <Text style={ styles.leftButton }>
+                    Back
+                  </Text>
+                </TouchableOpacity>
+            )
+        }
+        else { return null }
+    },
+    RightButton(route, navigator, index, navState) {
+        if (route.openMenu) return (
+            <TouchableOpacity
+                onPress = { () => route.openMenu() }>
+              <Text style = { styles.rightButton }>
+                  { route.rightText || 'Menu' }
+              </Text>
+            </TouchableOpacity>
+        )
+    },
+    Title(route, navigator, index, navState) {
+        return (
+            <Text style = { styles.title }>
+                {route.title}
+            </Text>
+        )
+    }
+};
 
-// class MoviesList extends Component {
-//   // static propTypes = {
-//   //   title: PropTypes.string.isRequired,
-//   //   navigator: PropTypes.object.isRequired,
-//   // }
-
-//   _onForward = () => {
-//     this.props.navigator.push({
-//       title: 'Scene ' + nextIndex,
-//     });
-//   }
-
-
-//   render() {
-//     return (
-//       <View>
-//         <Text>Current Scene: { this.props.title }</Text>
-//         <TouchableHighlight onPress={this._onForward}>
-//           <Text>Tap me to load the next scene</Text>
-//         </TouchableHighlight>
-//       </View>
-//     )
-//   }
-// }
 
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: 25,
-    //justifyContent: 'center',
-    //alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
+//   container: {
+//     flex: 1,
+//     marginTop: 25,
+//     //justifyContent: 'center',
+//     //alignItems: 'center',
+//     backgroundColor: '#F5FCFF',
+//   },
+//   welcome: {
+//     fontSize: 20,
+//     textAlign: 'center',
+//     margin: 10,
+//   },
+//   instructions: {
+//     textAlign: 'center',
+//     color: '#333333',
+//     marginBottom: 5,
+//   },
+    navigationBar: {
+        backgroundColor: '#F5FCFF',
+    },
+    leftButton: {
+        color: '#333333',
+        margin: 10,
+        fontSize: 17,
+    },
+    title: {
+        paddingVertical: 10,
+        color: '#333333',
+        justifyContent: 'center',
+        fontSize: 18
+    },
+    rightButton: {
+        color: '#333333',
+        margin: 10,
+        fontSize: 16
+    }
 });
 
 AppRegistry.registerComponent('showMovies', () => showMovies);
